@@ -19,23 +19,6 @@ var populate_names = function() {
         })   
 }
 
-// This code block will initialize the dashboard with a barplot of the selected test subject
-// d3.json(queryURL).then(function(data) {
-//         data.samples.forEach(sample => {
-//                 if (sample.id === '940') {
-//                         var svals = sample.sample_values
-//                         var labels = sample.otu_ids
-//                         // Add the OTU lettering to each OTU ID and return collect as a new array
-//                         labels_otu = labels.map(label => `OTU ${label}`)
-//                         // Extract the otu_labels for the hovertext
-//                         var hovertext = sample.otu_labels
-//                         // console.log(labels_otu)
-//                         initialize_barplot(labels_otu, svals, '940', hovertext)
-//                         // console.log(svals)
-//                         // console.log(`OTU ${labels}`)
-//                 }
-//         })
-// })
 
 // This code block will initialize the dashboard with a barplot and bubble plot of the first test subject, which is the first object in the data.samples array
 d3.json(queryURL).then(function(data) {
@@ -50,6 +33,7 @@ d3.json(queryURL).then(function(data) {
                         // console.log(svals)
                         // console.log(`OTU ${labels}`)
         initialize_bubbleplot(labels, svals, hovertext)
+        initialize_demog()
 })
 
 
@@ -108,10 +92,28 @@ var initialize_bubbleplot = function(ids, read_value, htext) {
         Plotly.newPlot('bubble', data, layout)
 }
 
+// This function initializes the demographic information display for the default subject ID (940)
+var initialize_demog = function () {
+        // First read in the JSON object again
+        d3.json(queryURL).then(function(data) {
+                // The first object within the metadata array contains a series of metadata properties related to subject id 940. Iterative over each of these properties and obtain their key:value pairs. Each key:value pair is a piece of demographic data
+                Object.entries(data.metadata[0]).forEach(function([key, value]) {
+                        // For each key:value pair, append a new paragraph HTML element and use the key:value information to assign the text value to that element
+                        d3.select('#sample-metadata')
+                        .append('p')
+                        .text(`${key}: ${value}`)
+                })
+        })
+}
+
+
+
 // Write the optionChanged function, which takes as an argument the value of the #selDataset when a change is detected by the DOM. Using this ID, extract the otu_ids, values, and labels, and pass them into the function updateBarplot()
 var optionChanged = function(new_value) {
         d3.json(queryURL).then(function(data) {
+                // Iterate over each object (sample) within the samples array.
                 data.samples.forEach(sample => {
+                        // If the sample id of the current sample is equal to the value of the selection of #selDataset, execute the code to extract the data
                         if (sample.id === new_value) {
                                 var svals = sample.sample_values
                                 var labels = sample.otu_ids
