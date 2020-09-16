@@ -81,7 +81,7 @@ var initialize_bubbleplot = function(ids, read_value, htext) {
         var data = [trace1];
 
         var layout = {
-                title: "Sequencing Reads for All UTO IDs",
+                title: "Sequencing Reads for All OTU IDs",
                 xaxis: {
                         title: "OTU ID"
                 },
@@ -165,7 +165,7 @@ var update_demog = function(subject_id) {
                 data.metadata.forEach(subject => {
                         // For the current object (subject), if the id of the subject is equal to the subject_id that was passed in by optionChanged, proceed to update the DOM with information from this subject. Note the unlike some of the other arrays in this dataset, in this case subject.id is a number, whereas subject_id that is passed into the function is a string. Therefore, subject.id must be converted into a string in in order for the test for equality to execute properly
                         if (subject.id.toString() === subject_id) {
-                                // Next, iterate over all of the objects of that subject as before, appending new paragraph elements with the updated information from the new subject id
+                                // Next, iterate over all of the key:value pairs of that subject as before, appending new paragraph elements with the updated information from the new subject id
                                 Object.entries(subject).forEach(function([key, value]) {
                                         // console.log(key, value)
                                         d3.select('#sample-metadata')
