@@ -22,6 +22,7 @@ var populate_names = function() {
 
 // This code block will initialize the dashboard with a barplot and bubble plot of the first test subject, which is the first object in the data.samples array
 d3.json(queryURL).then(function(data) {
+        populate_names()
         var svals = data.samples[0].sample_values
         var labels = data.samples[0].otu_ids
         // Add the OTU lettering to each OTU ID and return collect as a new array
@@ -124,12 +125,13 @@ var optionChanged = function(new_value) {
                                 // console.log(labels_otu)
                                 updateBarplot(labels_otu, svals, new_value, hovertext)
                                 updateBubbleplot(labels, svals, hovertext)
+                                update_demog(new_value)
                         }
                 })
         })
 }
 
-// This function updates the bar plot when a new test subject is selected. This function is called by optionChanged, which passes in the new ids, values, subject_id, and hover text
+// This function updates the bar plot when a new test subject is selected. This function is called by optionChanged, which passes in the new ids, values, and hover text
 var updateBarplot = function(id, value, htext) {
         var x = value.slice(0,9);
         var y = id.slice(0, 9);
@@ -151,4 +153,27 @@ var updateBubbleplot = function(ids, value, htext) {
         Plotly.restyle('bubble', 'text', [text]);
 
 }
-populate_names()
+
+// This function will update the demographic information when a new subject ID is selected. It is called by the optionChanged function, which passes in the new subject ID
+var update_demog = function(subject_id) {
+        // First remove all of the former paragraph elements within the '#sample-metadata' div
+        d3.select('#sample-metadata')
+        .selectAll('p').remove()
+        // Read in the JSON object again
+        d3.json(queryURL).then(function(data) {
+                // Iterate through each object (test subject) of the metadata array
+                data.metadata.forEach(subject => {
+                        // For the current object (subject), if the id of the subject is equal to the subject_id that was passed in by optionChanged, proceed to update the DOM with information from this subject. Note the unlike some of the other arrays in this dataset, in this case subject.id is a number, whereas subject_id that is passed into the function is a string. Therefore, subject.id must be converted into a string in in order for the test for equality to execute properly
+                        if (subject.id.toString() === subject_id) {
+                                // Next, iterate over all of the objects of that subject as before, appending new paragraph elements with the updated information from the new subject id
+                                Object.entries(subject).forEach(function([key, value]) {
+                                        // console.log(key, value)
+                                        d3.select('#sample-metadata')
+                                        .append('p')
+                                        .text(`${key}: ${value}`)
+                                })  
+                        }
+                })
+        })
+}
+
