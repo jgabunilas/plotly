@@ -20,5 +20,19 @@ The samples array likewise contains a series of JavaScript objects, one object p
 - OTU IDs: Each OTU, or operation taxonomic unit, was assigned a unique ID number. While not technically correct, for the purposes of this assignment, an OTU ID can be considered roughly synonymous with a species ID.
 - OTU Labels: Each OTU was also assigned a label based on the lowest identifiable taxonomic level of that OTU.
 
+## Dashboard Layout
+The dashboard contains five primary components
+1. Subject ID selector - allows the user to select a test subject and view data corresponding to the belly button microbiome analyzed from that subject
+2. Demographic Info Card - contains demographic information for that test subject obtained from the metadata
+3. Top 10 OTU Bar Plot - a horizontal bar plot displaying the sequencing read counts for the top 10 most abundant OTUs from that subject's belly button
+4. OTU Bubble Plot - a bubble plot showing the number of sequencing reads for *all* OTUs from that subject's belly button. The markers are sized in proportion to the number of reads
+5. Wash Frequency Gauge - a gauge that indicates how many times a week that subject washes his or her belly button.
+
 ## Initializing the Dashboard
-### Key functions
+The dashboard initializes to the data pertaining to the first subject in the dataset, subject 940. Key functions for the initialization:
+
+`populate_names()` 
+Populates the test subject ID selection dropdown menu (`select`) with the ID numbers of each subject. This is accomplished by reading the JSON object, retrieving the ID numbers from the `names` array and appending a new `option` element to the `select` object for each ID number. The `text` property of each `option` object is set to the ID number so that it will display on the webpage.
+
+`initialize_barplot()` 
+Creates an initial top 10 OTU bar plot representing the data from test subject **940**. Outside of this function, the read values, OTU IDs, and OTU labels are retrieved from the `samples` array of the JSON object. This data is then passed into `initialize_barplot()`, which assigns the data a trace object and uses the Plotly library to construct the bar plot.
