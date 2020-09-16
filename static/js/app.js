@@ -24,16 +24,16 @@ var populate_names = function() {
 d3.json(queryURL).then(function(data) {
         populate_names()
         var svals = data.samples[0].sample_values
-        var labels = data.samples[0].otu_ids
-        // Add the OTU lettering to each OTU ID and return collect as a new array
-        var labels_otu = labels.map(label => `OTU ${label}`)
+        var ids_otu = data.samples[0].otu_ids
+        // Add the OTU lettering to each OTU ID and return as a new array
+        var ids_OTU = ids_otu.map(otu => `OTU ${otu}`)
         // Extract the otu_labels for the hovertext
         var hovertext = data.samples[0].otu_labels
                         // console.log(labels_otu)
-        initialize_barplot(labels_otu, svals, hovertext)
+        initialize_barplot(ids_OTU, svals, hovertext)
                         // console.log(svals)
                         // console.log(`OTU ${labels}`)
-        initialize_bubbleplot(labels, svals, hovertext)
+        initialize_bubbleplot(ids_otu, svals, hovertext)
         initialize_demog()
 })
 
@@ -55,6 +55,9 @@ var initialize_barplot = function(ids, read_value, htext) {
 
         var layout = {
                 title: `Sequencing Read Numbers for Top 10 OTUs`,
+                xaxis: {
+                        title: 'Sequencing Read Count'
+                },
                 yaxis: {
                         // Sort the values in ascending order
                         categoryorder: 'total ascending'
@@ -117,14 +120,14 @@ var optionChanged = function(new_value) {
                         // If the sample id of the current sample is equal to the value of the selection of #selDataset, execute the code to extract the data
                         if (sample.id === new_value) {
                                 var svals = sample.sample_values
-                                var labels = sample.otu_ids
+                                var ids_otu = sample.otu_ids
                                 // Add the OTU lettering to each OTU ID and return collect as a new array
-                                labels_otu = labels.map(label => `OTU ${label}`)
+                                ids_OTU = ids_otu.map(otu => `OTU ${otu}`)
                                 // Extract the otu_labels for the hovertext
                                 var hovertext = sample.otu_labels
                                 // console.log(labels_otu)
-                                updateBarplot(labels_otu, svals, new_value, hovertext)
-                                updateBubbleplot(labels, svals, hovertext)
+                                updateBarplot(ids_OTU, svals, new_value, hovertext)
+                                updateBubbleplot(ids_otu, svals, hovertext)
                                 update_demog(new_value)
                         }
                 })
