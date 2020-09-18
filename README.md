@@ -21,6 +21,7 @@ The samples array likewise contains a series of JavaScript objects, one object p
 - OTU Labels: Each OTU was also assigned a label based on the lowest identifiable taxonomic level of that OTU.
 
 ## Dashboard Layout
+![Dashboard](/images/dashboard.png)
 The dashboard contains five primary components
 1. Subject ID selector - allows the user to select a test subject and view data corresponding to the belly button microbiome analyzed from that subject
 2. Demographic Info Card - contains demographic information for that test subject obtained from the metadata
@@ -45,6 +46,7 @@ Creates an initial top 10 OTU bar plot representing the data from test subject *
 This function initializes the bubble plot for test subject **940**. Similar to the barplot, this function takes as arguments the OTU IDs, sequencing read values, and OTU labels retrieved from the `samples` array of the JSON object. The function then constructs the initial bubbleplot based on the provided data. Unlike the barplot which describes only the top 10 OTUs, the bubbleplot is designed to display the sequencing read counts for *all* OTUs. 
 
 `initialize_gauge()`
+This function initializes the gauge chart for the default test subject **940**. It queries the first object of the metadata array which pertains to subject **940** and retrieves the value associated with the wash frequency `wfreq` key. Next, the Plotly library is used to construct the gauge chart. This custom chart features a gradually shaded gauge whose segmented colors depend on the number of washes conducted per week.
 
 ## Updating the Dashboard
 When the user selects a different test subject ID from the dropdown menu, the dashboard is programmed to refresh in real-time to display the information pertaining to the newly-selected test subject. Key functions for updating the dashboard:
@@ -64,3 +66,6 @@ The new OTU IDs, sequencing read values, and OTU labels pertaining to the newly 
 
 `update_demog()`
 `update_demog()` is called by `optionChanged()`, which passes in the `new_value` of the new subject ID selected from `#selDataset`. `update_demog()` first removes all `<p>` elements from the `#sample-metadata` demographics card, clearing out the element. Next, the `metadata` array within the JSON object is iterated over for each object within. For each object, a conditional check is performed to determine if the value of the `id` key is equal to the `new_value` subject ID. Importantly, the subject ID within the `metadata` array object is a number, whereas `new_value` is a string, and it is necessary to convert the metadata value to a string for the conditional check to execute properly. When a match is found, the function iterates over each key:value pair of the matching object and appends a new `<p>` element to `#sample-metadata` for each pair, effectively updating the demographics information.
+
+`update_gauge()`
+The `update_gauge()` function is likewise called by `optionChanged()`, and receives as arguments the JSON data array (`data`) and the `subject_id` of the newly selected subject that was initially passed into `optionChanged()`. The function iterates over each object in the `metadata` array of the JSON object and finds the wash frequency value associated with the `wfreq` key for the object (subject) that matches `subject_id`. The `value` of the gauge chart is then updated with this new wash frequency, and the chart is updated to reflect it.
