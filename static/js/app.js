@@ -34,7 +34,8 @@ d3.json(queryURL).then(function(data) {
                         // console.log(svals)
                         // console.log(`OTU ${labels}`)
         initialize_bubbleplot(ids_otu, svals, hovertext)
-        initialize_demog()
+        initialize_demog();
+        initialize_gauge();
 })
 
 
@@ -110,6 +111,109 @@ var initialize_demog = function () {
         })
 }
 
+var initialize_gauge = function () {
+        d3.json(queryURL).then(function(data) {
+                // Determine the number of washes for the default test subject (940), which is the value of the wfreq key within the metadata object for subject 940
+                var washes = data.metadata[0].wfreq
+                console.log(washes)
+                // Define the data for the gauge chart
+                var data = [
+                        {
+                                domain: { x: [0, 1], y: [0, 1] },
+                                value: washes,
+                                title: { 
+                                        text: "Belly Button Washes Per Week" 
+                                },
+                                type: "indicator",
+                                mode: "gauge+number",
+                                gauge: {
+                                        axis: { 
+                                                range: [0, 9] 
+                                        },
+                                        steps: [
+                                                { range: [0, 1], color: "fa615c" },
+                                                { range: [1, 2], color: "e67158" },
+                                                { range: [2, 3], color: "d28257" },
+                                                { range: [3, 4], color: "be9255" },
+                                                { range: [4, 5], color: "aaa353" },
+                                                { range: [5, 6], color: "96b350" },
+                                                { range: [6, 7], color: "82c44e" },
+                                                { range: [7, 8], color: "6ed44c" },
+                                                { range: [8, 9], color: "5ae54a" },
+                                        ],
+                                }
+                        }
+                      ];
+                      
+                var layout = { 
+                        width: 600, 
+                        height: 450, 
+                        margin: { t: 0, b: 0 } 
+                };
+                Plotly.newPlot('gauge', data, layout);
+        
+                // console.log(typeof washes)
+                // var trace1 = {
+                //         type: "pie",
+                //         showlegend: false,
+                //         hole: 0.4,
+                //         rotation: 90,
+                //         values: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 1000],
+                //         // text: ['0-1', '1-2', '2-3', '3-4', '4-5','5-6','6-7','7-8','8-9',""],
+                //         text: ['0', '1', '2', '3', '4', '5','6','7','8','9',""],
+                //         direction: "clockwise",
+                //         textinfo: "text",
+                //         textposition: "inside",
+                //         marker: {     
+                //           colors: ["#fa615c", "#e67158","#d28257","#be9255","#aaa353","#96b350","#82c44e","#6ed44c","#5ae54a", "#46f648", "#FFFFFF"]
+                //         },
+                //         // labels: ['0-1', '1-2', '2-3', '3-4','4-5','5-6','6-7','7-8','8-9',""],
+                //         labels: ['0', '1', '2', '3', '4','5','6','7','8','9',""],
+                //         hoverinfo: "label"
+                //       };
+                      
+                //       var degrees = 90, radius = 0.6;
+                //       var radians = degrees * Math.PI / 180;
+                //       var x = radius * Math.cos(radians);
+                //       var y = radius * Math.sin(radians);
+                      
+                // //       var washes_degrees = {
+                // //               '0': 171,
+                // //               '1': 153,
+                // //               '2': 135,
+                // //               '3': 117,
+                // //               '4': 99,
+                // //               '5': 81,
+                // //               '6': 63,
+                // //               '7': 45,
+                // //               '8': 27,
+                // //               '9': 9
+                // //       }
+                // //       var x = -1 * 0.85 * Math.cos(171);
+                // //       var y = 0.85 * Math.sin(171)
+                //       var layout = {
+                //         shapes:[{
+                //             type: 'line',
+                //             x0: 0.5,
+                //             y0: 0.5,
+                //             x1: x,
+                //             y1: y,
+                //             line: {
+                //               color: 'black',
+                //               width: 5
+                //             }
+                //           }],
+                //         title: 'Belly Button Washing Frequency - Scrubs Per Week',
+                //         xaxis: {visible: false, range: [-1, 1]},
+                //         yaxis: {visible: false, range: [-1, 1]}
+                //       };
+                      
+                //       var data = [trace1];
+                      
+                //       Plotly.plot('gauge', data, layout, {staticPlot: true});
+                
+        })
+}
 
 
 // Write the optionChanged function, which takes as an argument the value of the #selDataset when a change is detected by the DOM. Using this ID, extract the otu_ids, values, and labels, and pass them into the function updateBarplot()
@@ -127,9 +231,10 @@ var optionChanged = function(new_value) {
                                 var hovertext = sample.otu_labels
                 
                                 // console.log()
-                                updateBarplot(ids_OTU, svals, hovertext)
-                                updateBubbleplot(ids_otu, svals, hovertext)
-                                update_demog(new_value)
+                                updateBarplot(ids_OTU, svals, hovertext);
+                                updateBubbleplot(ids_otu, svals, hovertext);
+                                update_demog(new_value);
+                                update_gauge(data, new_value)
                         }
                 })
         })
@@ -181,3 +286,16 @@ var update_demog = function(subject_id) {
         })
 }
 
+// This function will update the gauge based on the wfreq of the newly selected test subject. It is called by the objectChange() function and accepts are arguments (1) the data JSON object and (2) the subject ID number of hte newly selected test subject.
+var update_gauge = function(data, subject_id) {
+        // Iterate through each subject within the metadata array of the data JSON.
+        data.metadata.forEach(subject => {
+                // Find the subject whose id matches the passed in subject_id variable from the function call. When a match is found, find the wash frequency (wfreq) value of that subject and set it equal to "washes"
+                if (subject.id.toString() === subject_id) {
+                        var washes = subject.wfreq
+                        // console.log(washes)
+                }
+                // Finally, update the gauge with the new value of belly button washes per week.
+                Plotly.restyle('gauge', 'value', [washes])
+        })
+}
