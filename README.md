@@ -47,4 +47,20 @@ This function initializes the bubble plot for test subject **940**. Similar to t
 `initialize_gauge()`
 
 ## Updating the Dashboard
-When the user selects a different test subject ID from the dropdown menu, the dashboard is programmed to refresh in real-time to display the information pertaining to the newly-selected test subject.
+When the user selects a different test subject ID from the dropdown menu, the dashboard is programmed to refresh in real-time to display the information pertaining to the newly-selected test subject. Key functions for updating the dashboard:
+
+`optionChanged()`
+This function is called by the HTML `#selDataset` subject ID selector element when a change is detected, specifically when a different subject ID is selected from the dropdown menu. It takes as an argument the new value (`new_value`) of `#selDataset`, which is equal to the value of the new subject ID `option` that was chosen from the dropdown menu. `optionChanged()` performs a number of tasks:
+1. The `samples` array of the JSON data object is iterated over until an object is encountered whose `id` value is equal to the new value of `#selDataset`. 
+2. When the matching object is encountered, the `sample_values`, `otu_ids`, `otu_labels` arrays are pulled from the object using standard object dot notation. 
+3. These variables are then passed to the functions `updateBarplot()` and `updateBubbleplot` (see below).
+4. `new_value` is passed to the function `update_demog` to update the demographics information card (see below).
+
+`updateBarplot()`
+The new OTU IDs, sequencing read values, and OTU labels pertaining to the newly selected subject ID are used to update the x, y, and text properties of the bar plot using `Plotly.restyle()`.
+
+`updateBubbleplot()`
+The new OTU IDs, sequencing read values, and OTU labels pertaining to the newly selected subject ID are used to update the x, y, and text properties of the bubble plot using `Plotly.restyle()`.
+
+`update_demog()`
+`update_demog()` is called by `optionChanged()`, which passes in the `new_value` of the new subject ID selected from `#selDataset`. `update_demog()` first removes all `<p>` elements from the `#sample-metadata` demographics card, clearing out the element. Next, the `metadata` array within the JSON object is iterated over for each object within. For each object, a conditional check is performed to determine if the value of the `id` key is equal to the `new_value` subject ID. Importantly, the subject ID within the `metadata` array object is a number, whereas `new_value` is a string, and it is necessary to convert the metadata value to a string for the conditional check to execute properly. When a match is found, the function iterates over each key:value pair of the matching object and appends a new `<p>` element to `#sample-metadata` for each pair, effectively updating the demographics information.
