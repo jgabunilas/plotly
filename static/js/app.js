@@ -125,8 +125,9 @@ var optionChanged = function(new_value) {
                                 ids_OTU = ids_otu.map(otu => `OTU ${otu}`)
                                 // Extract the otu_labels for the hovertext
                                 var hovertext = sample.otu_labels
-                                // console.log(labels_otu)
-                                updateBarplot(ids_OTU, svals, new_value, hovertext)
+                
+                                // console.log()
+                                updateBarplot(ids_OTU, svals, hovertext)
                                 updateBubbleplot(ids_otu, svals, hovertext)
                                 update_demog(new_value)
                         }

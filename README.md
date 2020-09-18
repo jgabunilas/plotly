@@ -34,5 +34,17 @@ The dashboard initializes to the data pertaining to the first subject in the dat
 `populate_names()` 
 Populates the test subject ID selection dropdown menu (`select`) with the ID numbers of each subject. This is accomplished by reading the JSON object, retrieving the ID numbers from the `names` array and appending a new `option` element to the `select` object for each ID number. The `text` property of each `option` object is set to the ID number so that it will display on the webpage.
 
+`initialize_demog()`
+Initializes the demographic information display with the data pertaining to subject **940**. Each piece of information is a key:value pair within the `metadata` array of the JSON object. Therefore, this function iterates over each of these pairs and appends a new `<p>` element for each one, setting the text property of that new element based on the key:value pair. 
+
+
 `initialize_barplot()` 
 Creates an initial top 10 OTU bar plot representing the data from test subject **940**. Outside of this function, the read values, OTU IDs, and OTU labels are retrieved from the `samples` array of the JSON object. This data is then passed into `initialize_barplot()`, which assigns the data a trace object and uses the Plotly library to construct the bar plot.
+
+`initialize_bubbleplot()`
+This function initializes the bubble plot for test subject **940**. Similar to the barplot, this function takes as arguments the OTU IDs, sequencing read values, and OTU labels retrieved from the `samples` array of the JSON object. The function then constructs the initial bubbleplot based on the provided data. Unlike the barplot which describes only the top 10 OTUs, the bubbleplot is designed to display the sequencing read counts for *all* OTUs. 
+
+`initialize_gauge()`
+
+## Updating the Dashboard
+When the user selects a different test subject ID from the dropdown menu, the dashboard is programmed to refresh in real-time to display the information pertaining to the newly-selected test subject.
