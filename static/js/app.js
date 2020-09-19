@@ -2,7 +2,7 @@
 // Written by Jason Gabunilas
 
 // Begin by using the D3 library to read in the data from samples.json
-var queryURL = `../../samples.json`
+var queryURL = `static/data/samples.json`
 
 // This function will populate the Test Subject ID No selection menu based on the returned JSON data
 var populate_names = function() {
