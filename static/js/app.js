@@ -22,10 +22,12 @@ var populate_names = function() {
 
 // This code block will initialize the dashboard with a barplot and bubble plot of the first test subject, which is the first object in the data.samples array
 d3.json(queryURL).then(function(data) {
+        // Call the populate_names() function to populate the options of the dropdown menu
         populate_names()
+        // Retrieve the read count values and OTU ID numbers from the first subject (subject 940) of the samples array
         var svals = data.samples[0].sample_values
         var ids_otu = data.samples[0].otu_ids
-        // Add the OTU lettering to each OTU ID and return as a new array
+        // Add the OTU lettering to each OTU ID and return as a new array. This will be needed for the bar chart.
         var ids_OTU = ids_otu.map(otu => `OTU ${otu}`)
         // Extract the otu_labels for the hovertext
         var hovertext = data.samples[0].otu_labels
