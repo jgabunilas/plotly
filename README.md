@@ -1,4 +1,4 @@
-# Plotly Homework Challenge - Belly Button Microbial Diversity
+# Belly Button Microbial Diversity with PlotlyJS
 
 ## Introduction
 In this assignment an interactive data dashboard was created from an extensive [2012 belly button microbiome study](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0047712) conducted by Hulcr and colleagues that was published in the peer-reviewed scientific journal PloS One. In this study, the authors found that there is an astonishing degree of bacterial diversity within human navels, but that a small number of taxa tended to dominate the microbial communities across most humans tested. Most of the remaining species appeared in only a few navels.
